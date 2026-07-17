@@ -1,0 +1,11 @@
+# Local Netlify folder
+.netlify
+
+# macOS
+.DS_Store
+
+# Raw font vendor downloads (EULAs + desktop OTF/TTF) — unused by the site,
+# which only references the webfont files under assets/fonts/herbik and
+# assets/fonts/lay-grotesk
+assets/fonts/CounterForms-Order-JCXJ5QJR-0001/
+assets/fonts/_Medium-1764206963825/
