@@ -136,6 +136,24 @@ textarea:focus-visible {
   padding-inline: var(--gutter);
 }
 
+/* Case-study project pages only — 30% wider side gutter than the rest of
+   the site (homepage, work index). */
+.case-page .wrap {
+  padding-inline: calc(var(--gutter) * 1.3);
+}
+
+/* Project Info grid keeps the site's normal gutter, matching the homepage. */
+.case-page .wrap-meta {
+  padding-inline: var(--gutter);
+}
+
+/* Gallery + case nav sit in from the edge further still, so the gallery
+   reads as centered on the page rather than flush with the wider gutter
+   used elsewhere on case-study pages. */
+.case-page .wrap-gallery {
+  padding-inline: calc(var(--gutter) * 1.3 * 1.2);
+}
+
 .eyebrow {
   font-family: var(--font-display);
   font-size: 0.75rem;
@@ -272,23 +290,9 @@ textarea:focus-visible {
   font-weight: 500;
   text-transform: none;
   letter-spacing: -4px;
-  font-size: clamp(6.9rem, 12.6vw, 9.3rem);
+  font-size: clamp(4.83rem, 8.82vw, 6.51rem);
   line-height: 1.4;
   color: var(--color-bg);
-}
-
-.menu-footer {
-  display: flex;
-  justify-content: space-between;
-  padding: var(--gutter);
-  font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.4;
-  letter-spacing: -0.028rem;
-  text-transform: uppercase;
-  color: var(--color-bg-alt);
 }
 
 /* =================================================================
@@ -541,21 +545,21 @@ section {
    Work — asymmetric numbered grid, two rows of three tiles
    ================================================================= */
 
+/* Uniform 3-column x 2-row grid of square tiles — shared by the homepage
+   "Selected Work" section and the full work index page. */
 .work-grid {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(3rem, 7vw, 7rem);
-}
-
-.work-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: clamp(1.5rem, 3.5vw, 3rem);
-  align-items: start;
 }
 
-.work-row.is-reversed {
-  grid-template-columns: 1fr 2fr 1fr;
+.work-grid .work-tile-media {
+  aspect-ratio: 1 / 1;
+}
+
+.work-grid .work-tile-media img {
+  height: 100%;
+  object-fit: cover;
 }
 
 .work-tile {
@@ -1019,10 +1023,10 @@ label.form-check {
   font-family: var(--font-display);
   font-style: normal;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.8rem;
   line-height: 1.4;
-  letter-spacing: -0.028rem;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-transform: none;
   color: #FFFFFF;
 }
 
@@ -1099,12 +1103,14 @@ label.form-check {
   }
 }
 
-.case-gallery img {
+.case-gallery img,
+.case-gallery video {
   width: 100%;
   display: block;
   border-radius: 2px;
 }
 
+.case-gallery .col-span-1 { grid-column-end: span 1; }
 .case-gallery .col-span-2 { grid-column-end: span 2; }
 .case-gallery .col-span-3 { grid-column-end: span 3; }
 .case-gallery .col-span-4 { grid-column-end: span 4; }
@@ -1115,6 +1121,7 @@ label.form-check {
 .case-gallery .col-start-3 { grid-column-start: 3; }
 .case-gallery .col-start-4 { grid-column-start: 4; }
 .case-gallery .col-start-5 { grid-column-start: 5; }
+.case-gallery .col-start-6 { grid-column-start: 6; }
 
 /* Vertically stacks an image with its own caption/text box, tight to just that
    image — used where a shorter row-mate would otherwise leave dead space above
@@ -1132,6 +1139,23 @@ label.form-check {
   grid-template-columns: 1.5fr 3fr;
   gap: var(--gallery-gap);
   grid-column: 1 / -1;
+}
+
+/* Row pairing an image with a video (or two items whose native aspect ratios
+   don't naturally resolve to the same height) — the image crops via
+   object-fit to match whatever height the video's own aspect ratio yields. */
+.case-gallery .fit-row {
+  display: flex;
+  gap: var(--gallery-gap);
+}
+
+.case-gallery .fit-row img {
+  width: 33.3333%;
+  object-fit: cover;
+}
+
+.case-gallery .fit-row video {
+  width: 66.6667%;
 }
 
 .placeholder-box {
@@ -1177,6 +1201,110 @@ img.aspect-inset {
 
 .case-gallery .gallery-text.is-long {
   min-height: 9rem;
+}
+
+.case-gallery .gallery-text h1 {
+  font-family: 'Herbik', 'Times New Roman', serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: clamp(1.3rem, 2.3vw, 1.65rem);
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.case-gallery .gallery-text p {
+  font-family: 'Herbik', 'Times New Roman', serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* =================================================================
+   Horizontal scrolling photo gallery — alternate to .case-gallery for
+   photography-led project pages (e.g. Vogue). Vertical scroll drives
+   horizontal movement: .horiz-gallery-sticky pins via position:sticky
+   while its parent's extra height (set in script.js, based on how far
+   the track overflows the viewport) supplies the scroll runway. Each
+   photo keeps its own real aspect ratio at a shared height, filmstrip-
+   style, rather than being cropped to a uniform ratio.
+   ================================================================= */
+
+.horiz-gallery {
+  position: relative;
+  padding-block: 0;
+  margin-top: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+.horiz-gallery-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.horiz-gallery-track {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-inline: var(--gutter);
+  will-change: transform;
+}
+
+.horiz-gallery-item {
+  flex: none;
+  height: min(86vh, 900px);
+  margin: 0;
+}
+
+.horiz-gallery-item img {
+  height: 100%;
+  width: auto;
+  max-width: none;
+  display: block;
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .horiz-gallery-sticky {
+    position: static;
+    height: auto;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    padding-block: 1rem;
+  }
+
+  .horiz-gallery-track {
+    transform: none !important;
+  }
+
+  .horiz-gallery-item {
+    height: 68vh;
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .horiz-gallery-sticky {
+    position: static;
+    height: auto;
+    overflow-x: auto;
+  }
+
+  .horiz-gallery-track {
+    transform: none !important;
+  }
 }
 
 .case-nav {
@@ -1266,8 +1394,7 @@ img.aspect-inset {
     padding-top: 1.5rem;
   }
 
-  .work-row,
-  .work-row.is-reversed {
+  .work-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
@@ -1286,6 +1413,7 @@ img.aspect-inset {
     gap: clamp(1rem, 2.5vw, 2rem);
   }
 
+  .case-gallery .col-span-1,
   .case-gallery .col-span-2,
   .case-gallery .col-span-3,
   .case-gallery .col-span-4,
@@ -1295,6 +1423,19 @@ img.aspect-inset {
 
   .case-gallery .pair-1-2 {
     grid-template-columns: 1fr;
+  }
+
+  .case-gallery .fit-row {
+    flex-direction: column;
+  }
+
+  .case-gallery .fit-row img,
+  .case-gallery .fit-row video {
+    width: 100%;
+  }
+
+  .case-gallery .fit-row img {
+    height: auto;
   }
 }
 

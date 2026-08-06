@@ -21,6 +21,71 @@ if (logoSplash) {
   });
 }
 
+// Horizontal scrolling photo gallery (Vogue-style project pages) — pins
+// #horizGallery-sticky via CSS position:sticky, then translates the track
+// horizontally in proportion to how far the page has scrolled through the
+// wrapper's height. Disabled on mobile/reduced-motion, where the CSS falls
+// back to a native horizontally-scrollable strip instead.
+const horizGallery = document.getElementById('horizGallery');
+
+if (horizGallery) {
+  const track = horizGallery.querySelector('.horiz-gallery-track');
+  const mobileQuery = window.matchMedia('(max-width: 768px)');
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let scrollLength = 0;
+  let ticking = false;
+  let active = false;
+
+  const measure = () => {
+    scrollLength = Math.max(0, track.scrollWidth - window.innerWidth);
+    horizGallery.style.height = `${window.innerHeight + scrollLength}px`;
+  };
+
+  const updateTrack = () => {
+    const progress = Math.min(Math.max(-horizGallery.getBoundingClientRect().top, 0), scrollLength);
+    track.style.transform = `translateX(-${progress}px)`;
+    ticking = false;
+  };
+
+  const onScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateTrack);
+      ticking = true;
+    }
+  };
+
+  const enable = () => {
+    if (active) return;
+    active = true;
+    measure();
+    updateTrack();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  };
+
+  const disable = () => {
+    if (!active) return;
+    active = false;
+    window.removeEventListener('scroll', onScroll);
+    horizGallery.style.height = '';
+    track.style.transform = '';
+  };
+
+  const sync = () => {
+    if (mobileQuery.matches || motionQuery.matches) {
+      disable();
+    } else {
+      enable();
+      measure();
+      updateTrack();
+    }
+  };
+
+  sync();
+  window.addEventListener('resize', sync);
+  mobileQuery.addEventListener('change', sync);
+  motionQuery.addEventListener('change', sync);
+}
+
 // Full-page menu overlay
 const menuToggle = document.getElementById('menuToggle');
 const menuClose = document.getElementById('menuClose');
