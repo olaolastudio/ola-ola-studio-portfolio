@@ -1155,12 +1155,22 @@ label.form-check {
   margin-top: 1.25rem;
 }
 
+.resume-links+.resume-links {
+  margin-top: 0.5rem;
+}
+
 .resume-links a {
   color: var(--color-ink);
 }
 
 .resume-links a:hover {
   color: var(--color-link-hover);
+}
+
+.resume-header,
+.resume-layout {
+  max-width: 1200px;
+  margin-inline: auto;
 }
 
 .resume-layout {
@@ -1175,7 +1185,7 @@ label.form-check {
 }
 
 .resume-aside .resume-block+.resume-block {
-  margin-top: clamp(1rem, 2vw, 1.5rem);
+  margin-top: clamp(0.5rem, 1vw, 0.75rem);
 }
 
 .resume-cap-group+.resume-cap-group {
