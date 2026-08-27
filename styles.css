@@ -1092,6 +1092,14 @@ label.form-check {
    Resume page
    ================================================================= */
 
+/* Resume-only override: case-meta-heading is 2 steps down the h2/h3/h4
+   scale (lands on the h4 size) and loses its underline — scoped to this
+   page only, the shared .case-meta-heading rule elsewhere is untouched. */
+.resume-page .case-meta-heading {
+  font-size: 1rem;
+  border-bottom: none;
+}
+
 .resume-header {
   display: flex;
   justify-content: space-between;
