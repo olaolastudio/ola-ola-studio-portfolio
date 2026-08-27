@@ -1092,11 +1092,21 @@ label.form-check {
    Resume page
    ================================================================= */
 
-/* Resume-only override: case-meta-heading is 2 steps down the h2/h3/h4
-   scale (lands on the h4 size) and loses its underline — scoped to this
+/* Resume-only override: case-meta-heading is 1 step down the h2/h3/h4
+   scale (lands on the h3 size) and loses its underline — scoped to this
    page only, the shared .case-meta-heading rule elsewhere is untouched. */
 .resume-page .case-meta-heading {
-  font-size: 1rem;
+  font-size: clamp(1.08rem, 1.7vw, 1.35rem);
+  border-bottom: none;
+}
+
+/* Timeline is a shared/dormant component reused here — drop its top rule
+   and the last row's bottom rule, scoped to this page only. */
+.resume-page .timeline {
+  border-top: none;
+}
+
+.resume-page .timeline-row:last-child {
   border-bottom: none;
 }
 
@@ -1107,7 +1117,7 @@ label.form-check {
   flex-wrap: wrap;
   gap: 1.5rem;
   padding-top: clamp(2rem, 5vw, 3.5rem);
-  padding-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: clamp(1rem, 2vw, 1.5rem);
   border-bottom: 1.5px solid var(--color-ink);
 }
 
@@ -1141,6 +1151,18 @@ label.form-check {
   color: var(--color-link-hover);
 }
 
+.resume-links {
+  margin-top: 1.25rem;
+}
+
+.resume-links a {
+  color: var(--color-ink);
+}
+
+.resume-links a:hover {
+  color: var(--color-link-hover);
+}
+
 .resume-layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -1149,11 +1171,11 @@ label.form-check {
 }
 
 .resume-block+.resume-block {
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
 }
 
 .resume-aside .resume-block+.resume-block {
-  margin-top: clamp(2rem, 4vw, 2.75rem);
+  margin-top: clamp(1rem, 2vw, 1.5rem);
 }
 
 .resume-cap-group+.resume-cap-group {
